@@ -1,13 +1,17 @@
-import React from 'react';
 import Link from 'next/link';
+import NavStyles from './styles/NavStyles';
+
+const list = ['Items', 'Sell', 'Signup', 'Orders', 'Me'];
 
 const Nav = () => {
   return (
-    <>
-      <Link>
-        <a>nav link</a>
-      </Link>
-    </>
+    <NavStyles>
+      {list.map(value => (
+        <Link key={value} href={`/${value.toLowerCase()}`}>
+          <a>{value}</a>
+        </Link>
+      ))}
+    </NavStyles>
   );
 };
 
