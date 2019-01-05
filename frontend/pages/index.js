@@ -1,11 +1,8 @@
-import Link from 'next/link';
+import Items from './items';
 
 const Home = () => (
   <div>
-    <p>Hey!</p>
-    <Link href="/sell">
-      <a>Sell link</a>
-    </Link>
+    <Items/>
   </div>
 );
 

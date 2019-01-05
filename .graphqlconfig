@@ -1,0 +1,16 @@
+{
+  "schema": {
+    "file": "backend/src/generated/prisma.graphql"
+  },
+  "endpoints": [
+    {
+      "name": "Default (http://localhost:4444)",
+      "url": "http://localhost:4444",
+      "options": {
+        "headers": {
+          "user-agent": "JS GraphQL"
+        }
+      }
+    }
+  ]
+}
