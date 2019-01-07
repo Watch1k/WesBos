@@ -31,9 +31,10 @@ class CreateItem extends Component {
   state = {
     title: 'Cool title',
     description: 'Cool desc',
-    image: 'dog.jpg',
-    largeImage: 'large-dog.jpg',
+    image: '',
+    largeImage: '',
     price: 300,
+    imageLoading: false,
   };
 
   handleChange = e => {
@@ -43,6 +44,27 @@ class CreateItem extends Component {
       : value;
 
     this.setState({ [name]: val });
+  };
+
+  uploadFile = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+
+    data.append('file', files[0]);
+    data.append('upload_preset', 'sickfits');
+
+    this.setState({ imageLoading: true });
+    const res = await fetch('http://api.cloudinary.com/v1_1/dwr3og8hq/image/upload/', {
+      method: 'POST',
+      body: data,
+    });
+    const file = await res.json();
+
+    this.setState({
+      image: file.secure_url,
+      largeImage: file.eager[0].secure_url,
+      imageLoading: false,
+    });
   };
 
   render() {
@@ -62,6 +84,20 @@ class CreateItem extends Component {
           }}>
             <ErrorMessage error={error}/>
             <fieldset disabled={loading} aria-busy={loading}>
+              <label htmlFor="file">
+                Image
+                <input
+                  type="file"
+                  id="file"
+                  name="file"
+                  placeholder="Upload an image"
+                  required
+                  onChange={this.uploadFile}
+                />
+                {this.state.imageLoading && 'Loading...'}
+                {this.state.image && <img src={this.state.image} width="200" alt="Upload Preview"/>}
+              </label>
+
               <label htmlFor="title">
                 Title
                 <input
@@ -71,7 +107,8 @@ class CreateItem extends Component {
                   placeholder="Title"
                   required
                   value={this.state.title}
-                  onChange={this.handleChange}/>
+                  onChange={this.handleChange}
+                />
               </label>
 
               <label htmlFor="price">
@@ -83,7 +120,8 @@ class CreateItem extends Component {
                   placeholder="Price"
                   required
                   value={this.state.price}
-                  onChange={this.handleChange}/>
+                  onChange={this.handleChange}
+                />
               </label>
 
               <label htmlFor="description">
@@ -94,7 +132,8 @@ class CreateItem extends Component {
                   placeholder="Description"
                   required
                   value={this.state.description}
-                  onChange={this.handleChange}/>
+                  onChange={this.handleChange}
+                />
               </label>
 
               <button type="submit">Submit</button>
