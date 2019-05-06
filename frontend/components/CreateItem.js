@@ -68,6 +68,8 @@ class CreateItem extends Component {
   };
 
   render() {
+    const { imageLoading } = this.state;
+
     return (
       <Mutation
         mutation={CREATE_ITEM_MUTATION}
@@ -83,7 +85,7 @@ class CreateItem extends Component {
             });
           }}>
             <ErrorMessage error={error}/>
-            <fieldset disabled={loading} aria-busy={loading}>
+            <fieldset disabled={loading || imageLoading} aria-busy={loading || imageLoading}>
               <label htmlFor="file">
                 Image
                 <input
@@ -94,7 +96,7 @@ class CreateItem extends Component {
                   required
                   onChange={this.uploadFile}
                 />
-                {this.state.imageLoading && 'Loading...'}
+                {imageLoading && 'Loading...'}
                 {this.state.image && <img src={this.state.image} width="200" alt="Upload Preview"/>}
               </label>
 
@@ -136,7 +138,7 @@ class CreateItem extends Component {
                 />
               </label>
 
-              <button type="submit">Submit</button>
+              <button type="submit">Sav{loading ? 'ing' : 'e'}</button>
             </fieldset>
           </Form>
         )}
