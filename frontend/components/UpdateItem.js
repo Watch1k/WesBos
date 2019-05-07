@@ -3,7 +3,6 @@ import Form from './styles/Form';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import ErrorMessage from './ErrorMessage';
-import Router from 'next/router';
 
 const SINGLE_ITEM_QUERY = gql`
   query SINGLE_ITEM_QUERY($id: ID!) {
@@ -18,18 +17,17 @@ const SINGLE_ITEM_QUERY = gql`
 
 const UPDATE_ITEM_MUTATION = gql`
   mutation UPDATE_ITEM_MUTATION(
-    $title: String!,
-    $description: String!,
-    $price: Int!,
+    $id: ID!,
+    $title: String,
+    $description: String,
+    $price: Int,
   ) {
     updateItem(
+      id: $id,
       data: {
         title: $title
         description: $description
         price: $price
-      },
-      where: {
-        id: $id
       },
     ) {
       id
@@ -52,30 +50,33 @@ class UpdateItem extends Component {
     this.setState({ [name]: val });
   };
 
+  updateItem = (e, updateItemMutation) => {
+    e.preventDefault();
+    updateItemMutation({
+      variables: {
+        id: this.props.id,
+        ...this.state,
+      },
+    });
+  };
+
   render() {
+    const { id } = this.props;
     const { imageLoading } = this.state;
 
     return (
-      <Query query={SINGLE_ITEM_QUERY} variables={{
-        id: this.props.id,
-      }}>
-        {({data, loading}) => {
+      <Query query={SINGLE_ITEM_QUERY} variables={{ id }}>
+        {({ data, loading }) => {
           if (loading) return <p>Loading...</p>;
+          if (!data.item) return <p>No item found for ID {id}</p>;
 
           return (
             <Mutation
               mutation={UPDATE_ITEM_MUTATION}
               variables={this.state}
             >
-              {(mutationFn, { loading, error }) => (
-                <Form onSubmit={async (e) => {
-                  e.preventDefault();
-                  const res = await mutationFn();
-                  Router.push({
-                    pathname: '/item',
-                    query: { id: res.data.updateItem.id },
-                  });
-                }}>
+              {(updateItem, { loading, error }) => (
+                <Form onSubmit={e => this.updateItem(e, updateItem)}>
                   <ErrorMessage error={error}/>
                   <fieldset disabled={loading || imageLoading} aria-busy={loading || imageLoading}>
                     <label htmlFor="title">
