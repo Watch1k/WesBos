@@ -66,9 +66,9 @@ class UpdateItem extends Component {
 
     return (
       <Query query={SINGLE_ITEM_QUERY} variables={{ id }}>
-        {({ data, loading }) => {
+        {({ error, data, loading }) => {
+          if (error) return <ErrorMessage error={error}/>;
           if (loading) return <p>Loading...</p>;
-          if (!data.item) return <p>No item found for ID {id}</p>;
 
           return (
             <Mutation
