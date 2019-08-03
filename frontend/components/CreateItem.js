@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import Form from './styles/Form';
-import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
-import ErrorMessage from './ErrorMessage';
-import Router from 'next/router';
+import React, { Component } from 'react'
+import Form from './styles/Form'
+import { Mutation } from 'react-apollo'
+import gql from 'graphql-tag'
+import ErrorMessage from './ErrorMessage'
+import Router from 'next/router'
 
 const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION(
@@ -25,7 +25,7 @@ const CREATE_ITEM_MUTATION = gql`
       id
     }
   }
-`;
+`
 
 class CreateItem extends Component {
   state = {
@@ -35,40 +35,40 @@ class CreateItem extends Component {
     largeImage: '',
     price: 300,
     imageLoading: false,
-  };
+  }
 
   handleChange = e => {
-    const { name, type, value } = e.target;
+    const { name, type, value } = e.target
     const val = type === 'number'
       ? value ? parseFloat(value) : ''
-      : value;
+      : value
 
-    this.setState({ [name]: val });
-  };
+    this.setState({ [name]: val })
+  }
 
   uploadFile = async (e) => {
-    const files = e.target.files;
-    const data = new FormData();
+    const files = e.target.files
+    const data = new FormData()
 
-    data.append('file', files[0]);
-    data.append('upload_preset', 'sickfits');
+    data.append('file', files[0])
+    data.append('upload_preset', 'sickfits')
 
-    this.setState({ imageLoading: true });
+    this.setState({ imageLoading: true })
     const res = await fetch('http://api.cloudinary.com/v1_1/dwr3og8hq/image/upload/', {
       method: 'POST',
       body: data,
-    });
-    const file = await res.json();
+    })
+    const file = await res.json()
 
     this.setState({
       image: file.secure_url,
       largeImage: file.eager[0].secure_url,
       imageLoading: false,
-    });
-  };
+    })
+  }
 
   render() {
-    const { imageLoading } = this.state;
+    const { imageLoading } = this.state
 
     return (
       <Mutation
@@ -77,12 +77,15 @@ class CreateItem extends Component {
       >
         {(mutationFn, { loading, error }) => (
           <Form onSubmit={async (e) => {
-            e.preventDefault();
-            const res = await mutationFn();
+            e.preventDefault()
+            const res = await mutationFn()
+            this.setState({
+              cacheId: res.data.createItem.id,
+            })
             Router.push({
               pathname: '/item',
               query: { id: res.data.createItem.id },
-            });
+            })
           }}>
             <ErrorMessage error={error}/>
             <fieldset disabled={loading || imageLoading} aria-busy={loading || imageLoading}>
@@ -143,9 +146,9 @@ class CreateItem extends Component {
           </Form>
         )}
       </Mutation>
-    );
+    )
   }
 }
 
-export default CreateItem;
-export { CREATE_ITEM_MUTATION };
+export default CreateItem
+export { CREATE_ITEM_MUTATION }

@@ -17,7 +17,7 @@ const PAGINATION_QUERY = gql`
   }
 `;
 
-const MyComponent = (props) => (
+const Pagination = (props) => (
   <Query query={PAGINATION_QUERY}>
     {({ data, loading, error }) => {
       if (loading) return <p>Loading...</p>;
@@ -32,16 +32,24 @@ const MyComponent = (props) => (
           <Head>
             <title>Sick Fits! | Page {page} of {pages}</title>
           </Head>
-          <Link href={{
+          <Link
+            prefetch
+            href={{
             pathname: 'items',
             query: { page: page - 1 },
           }}><a> Prev</a></Link>
           <div>page {page} of {pages}</div>
+          <Link
+            prefetch
+            href={{
+            pathname: 'items',
+            query: { page: page + 1 },
+          }}><a> Next</a></Link>
         </PaginationStyles>
       );
     }}
   </Query>
 );
 
-export default MyComponent;
+export default Pagination;
 

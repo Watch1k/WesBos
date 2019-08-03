@@ -1,3 +1,3 @@
-import Items from '../components/Items';
+import Items from './index';
 
 export default Items;
