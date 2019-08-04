@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const NavStyles = styled.ul`
   margin: 0;
@@ -13,10 +13,11 @@ const NavStyles = styled.ul`
     align-items: center;
     position: relative;
     text-transform: uppercase;
-    font-weight: 900;
     font-size: 1em;
     background: none;
     border: 0;
+    color: ${props => props.theme.black};
+    font-weight: 800;
     cursor: pointer;
     @media (max-width: 700px) {
       font-size: 10px;
@@ -62,6 +63,6 @@ const NavStyles = styled.ul`
     justify-content: center;
     font-size: 1.5rem;
   }
-`;
+`
 
-export default NavStyles;
+export default NavStyles

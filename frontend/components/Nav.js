@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import NavStyles from './styles/NavStyles'
 import User from './User'
+import Signout from './Signout'
 
 const list = [
   { name: 'Shop', url: 'items' },
@@ -28,6 +29,7 @@ const Nav = () => {
               return null
             }
           })}
+          {me && <Signout/>}
         </NavStyles>
       )}
     </User>
