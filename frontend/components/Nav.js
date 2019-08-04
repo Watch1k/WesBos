@@ -2,20 +2,35 @@ import Link from 'next/link'
 import NavStyles from './styles/NavStyles'
 import User from './User'
 
-const list = ['Items', 'Sell', 'Signup', 'Orders', 'Me']
+const list = [
+  { name: 'Shop', url: 'items' },
+  { name: 'Sell', url: 'sell' },
+  { name: 'Sign Up', url: 'signup' },
+  { name: 'Orders', url: 'orders' },
+  { name: 'Account', url: 'me' },
+  { name: 'Sign In', url: 'signup' },
+]
 
 const Nav = () => {
   return (
-    <NavStyles>
-      <User>
-        {({ data }) => data.me ? <p>{data.me.name}</p> : null}
-      </User>
-      {list.map(value => (
-        <Link key={value} href={`/${value.toLowerCase()}`}>
-          <a>{value}</a>
-        </Link>
-      ))}
-    </NavStyles>
+    <User>
+      {({ data: { me } }) => (
+        <NavStyles>
+          {list.map(({ name, url },
+                     index) => {
+            if (index === 0 || !me && index === list.length - 1 || me && index < list.length - 1) {
+              return (
+                <Link key={url} href={`/${url}`}>
+                  <a>{name}</a>
+                </Link>
+              )
+            } else {
+              return null
+            }
+          })}
+        </NavStyles>
+      )}
+    </User>
   )
 }
 
