@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
+import Router from 'next/router'
 import Form from './styles/Form'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 import ErrorMessage from './ErrorMessage'
-import Router from 'next/router'
 
 const CREATE_ITEM_MUTATION = gql`
   mutation CREATE_ITEM_MUTATION(

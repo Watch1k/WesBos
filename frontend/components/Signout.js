@@ -1,6 +1,7 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
 import { CURRENT_USER_QUERY } from './User'
+
 import gql from 'graphql-tag'
 
 const SIGNOUT_MUTATION = gql`

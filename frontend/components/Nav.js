@@ -3,32 +3,32 @@ import NavStyles from './styles/NavStyles'
 import User from './User'
 import Signout from './Signout'
 
-const list = [
-  { name: 'Shop', url: 'items' },
-  { name: 'Sell', url: 'sell' },
-  { name: 'Sign Up', url: 'signup' },
-  { name: 'Orders', url: 'orders' },
-  { name: 'Account', url: 'me' },
-  { name: 'Sign In', url: 'signup' },
-]
-
 const Nav = () => {
   return (
     <User>
       {({ data: { me } }) => (
         <NavStyles>
-          {list.map(({ name, url },
-                     index) => {
-            if (index === 0 || !me && index === list.length - 1 || me && index < list.length - 1) {
-              return (
-                <Link key={url} href={`/${url}`}>
-                  <a>{name}</a>
+          <Link key="items" href="/items">
+            <a>Shop</a>
+          </Link>
+          {me
+            ? (
+              <>
+                <Link key="sell" href="/sell">
+                  <a>Sell</a>
                 </Link>
-              )
-            } else {
-              return null
-            }
-          })}
+                <Link key="orders" href="/orders">
+                  <a>Orders</a>
+                </Link>
+                <Link key="me" href="/me">
+                  <a>Account</a>
+                </Link></>
+            )
+            : (
+              <Link key="signup" href="/signup">
+                <a>Sign In</a>
+              </Link>
+            )}
           {me && <Signout/>}
         </NavStyles>
       )}
