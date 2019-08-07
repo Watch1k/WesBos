@@ -24,11 +24,9 @@ const UPDATE_ITEM_MUTATION = gql`
   ) {
     updateItem(
       id: $id,
-      data: {
-        title: $title
-        description: $description
-        price: $price
-      },
+      title: $title
+      description: $description
+      price: $price
     ) {
       id
       title

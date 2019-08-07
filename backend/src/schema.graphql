@@ -5,8 +5,8 @@ type SuccessMessage {
 }
 
 type Mutation {
-    createItem(data: ItemCreateInput!): Item!
-    updateItem(id: ID!, data: ItemUpdateInput!): Item!
+    createItem(title: String, description: String, price: Int, image: String, largeImage: String): Item!
+    updateItem(id: ID!, title: String, description: String, price: Int): Item!
     deleteItem(id: ID!): Item!
     signup(email: String!, password: String!, name: String!): User!
     signin(email: String!, password: String!): User!
@@ -20,4 +20,5 @@ type Query {
     item(where: ItemWhereUniqueInput!): Item
     itemsConnection(where: ItemWhereInput): ItemConnection
     me: User
+    users: [User]!
 }

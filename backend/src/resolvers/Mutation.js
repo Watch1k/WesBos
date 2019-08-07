@@ -2,13 +2,23 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { randomBytes } = require('crypto')
 const { promisify } = require('util')
+const { transport, makeEmail } = require('../mail')
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
-    // TODO: Check if they are logged in
+    if (!ctx.request.userId) {
+      throw new Error('You must be logged in to do that!')
+    }
 
     const item = await ctx.db.mutation.createItem({
-      ...args,
+      data: {
+        ...args,
+        user: {
+          connect: {
+            id: ctx.request.userId,
+          },
+        },
+      }
     }, info)
 
     return item
@@ -21,7 +31,7 @@ const Mutations = {
     // run the update method
     return ctx.db.mutation.updateItem(
       {
-        ...updates,
+        data: updates,
         where: { id: args.id },
       },
       info,
@@ -80,18 +90,25 @@ const Mutations = {
   },
   async requestReset(parent, args, ctx, info) {
     // 1. Check if this is a real user
-    const user = ctx.db.query.user({ where: { email: args.email } })
+    const user = await ctx.db.query.user({ where: { email: args.email } })
     if (!user) {
       throw new Error(`No such user found for email ${args.email}`)
     }
     // 2. Set a reset token and expiry on that user
     const resetToken = (await promisify(randomBytes)(20)).toString('hex')
     const resetTokenExpiry = Date.now() + 3600000 // 1 hour from now
-    const res = await ctx.db.mutation.updateUser({
+    await ctx.db.mutation.updateUser({
       where: { email: args.email },
       data: { resetToken, resetTokenExpiry },
     })
     // 3. Email them that reset token
+    await transport.sendMail({
+      from: 'host.sf@gmail.com',
+      to: user.email,
+      subject: 'Your password reset token',
+      html: makeEmail(`Your password reset token is here! <a href="${process.env.FRONTEND_URL}/reset?resetToken=${resetToken}">Click here to reset</a>`),
+    })
+    // 4. Return the message
     return { message: 'Reset!' }
   },
   async resetPassword(parent, args, ctx, info) {
