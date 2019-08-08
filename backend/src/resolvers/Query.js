@@ -1,4 +1,4 @@
-const { hasPermission } = require('../utils')
+const { hasPermissions } = require('../utils')
 const { forwardTo } = require('prisma-binding')
 
 const Query = {
@@ -25,8 +25,8 @@ const Query = {
     if (!ctx.request.userId) {
       throw new Error('You must be logged in')
     }
-    hasPermission(ctx.request.user, ['ADMIN', 'PERMISSIONUPDATE'])
-    return ctx.db.users({}, info)
+    hasPermissions(ctx.request.user, ['ADMIN', 'PERMISSIONUPDATE'])
+    return ctx.db.query.users({}, info)
   },
 }
 
