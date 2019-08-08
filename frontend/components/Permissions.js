@@ -4,6 +4,7 @@ import ErrorMessage from './ErrorMessage'
 import gql from 'graphql-tag'
 import Table from './styles/Table'
 import SickButton from './styles/SickButton'
+import PropTypes from 'prop-types'
 
 const possiblePermissions = [
   'ADMIN',
@@ -50,6 +51,29 @@ const Permissions = props => (
 )
 
 class UserPermissions extends React.Component {
+  static propTypes = {
+    user: PropTypes.shape({
+      name: PropTypes.string,
+      email: PropTypes.string,
+      id: PropTypes.string,
+      permissions: PropTypes.array,
+    }).isRequired,
+  }
+  state = {
+    permissions: this.props.user.permissions,
+  }
+
+  onChange = (e) => {
+    const { checked, value } = e.target
+    let permissions = [...this.state.permissions]
+    if (checked) {
+      permissions.push(value)
+    } else {
+      permissions = permissions.filter(permission => permission !== value)
+    }
+    this.setState({ permissions })
+  }
+
   render() {
     const { name, email, id } = this.props.user
     return (
@@ -57,9 +81,15 @@ class UserPermissions extends React.Component {
         <td>{name}</td>
         <td>{email}</td>
         {possiblePermissions.map(permission => (
-          <td>
+          <td key={permission}>
             <label htmlFor={`${id}-permission-${permission}`}>
-              <input type="checkbox" />
+              <input
+                name={`${id}-permission-${permission}`}
+                type="checkbox"
+                value={permission}
+                checked={this.state.permissions.includes(permission)}
+                onChange={this.onChange}
+              />
             </label>
           </td>
         ))}
