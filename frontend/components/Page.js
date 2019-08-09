@@ -50,7 +50,8 @@ injectGlobal`
     color: ${theme.black};
   }
   label,
-  input {
+  input,
+  button {
     cursor: pointer;
   }
 `

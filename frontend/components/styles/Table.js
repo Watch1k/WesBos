@@ -4,6 +4,7 @@ const Table = styled.table`
   border-spacing: 0;
   width: 100%;
   border: 1px solid ${props => props.theme.offWhite};
+  border-collapse: collapse;
   thead {
     font-size: 10px;
   }
@@ -20,6 +21,15 @@ const Table = styled.table`
         width: 100%;
       }
     }
+  },
+  td {
+    padding: 0;
+    height: 0;
+  }
+  label {
+    padding: 10px 5px;
+    display: block;
+    height: 100%;
   }
   tr {
     &:hover {
