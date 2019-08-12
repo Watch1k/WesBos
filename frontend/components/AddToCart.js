@@ -1,6 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import Mutation from 'react-apollo/Mutation'
+import { CURRENT_USER_QUERY } from './User'
 
 const ADD_TO_CART_MUTATION = gql`
   mutation ADD_TO_CART_MUTATION($id: ID!) {
@@ -17,6 +18,7 @@ class AddToCart extends React.Component {
     return (
       <Mutation
         mutation={ADD_TO_CART_MUTATION}
+        refetchQueries={[{ query: CURRENT_USER_QUERY }]}
         variables={{ id }}
       >
         {(addToCart) => (
