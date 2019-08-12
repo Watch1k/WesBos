@@ -85,7 +85,7 @@ class CreateItem extends Component {
               query: { id: res.data.createItem.id },
             })
           }}>
-            <ErrorMessage error={error}/>
+            <ErrorMessage error={error} />
             <fieldset disabled={loading || imageLoading} aria-busy={loading || imageLoading}>
               <label htmlFor="file">
                 Image
@@ -98,7 +98,7 @@ class CreateItem extends Component {
                   onChange={this.uploadFile}
                 />
                 {imageLoading && 'Loading...'}
-                {this.state.image && <img src={this.state.image} width="200" alt="Upload Preview"/>}
+                {this.state.image && <img src={this.state.image} width="200" alt="Upload Preview" />}
               </label>
 
               <label htmlFor="title">
