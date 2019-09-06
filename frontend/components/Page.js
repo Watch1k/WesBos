@@ -54,6 +54,9 @@ injectGlobal`
   button {
     cursor: pointer;
   }
+  button {
+    border: none;
+  }
 `
 
 class Page extends Component {
