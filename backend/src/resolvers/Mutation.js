@@ -223,6 +223,11 @@ const Mutations = {
       where: { id: args.id },
     }, info )
   },
+  async createOrder(parent, args, ctx, info) {
+    if (!ctx.request.userId) {
+      throw new Error('You must be logged in to do that!')
+    }
+  }
 }
 
 module.exports = Mutations
