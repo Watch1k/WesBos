@@ -10,6 +10,7 @@ import CartItem from './CartItem'
 import calcTotalPrice from '../lib/calcTotalPrice'
 import formatMoney from '../lib/formatMoney'
 import { adopt } from 'react-adopt'
+import TakeMyMoney from './TakeMyMoney'
 
 const LOCAL_STATE_QUERY = gql`
   query {
@@ -48,11 +49,13 @@ const Cart = () => (
             <p>You have {me.cart.length} item{me.cart.length === 1 ? '' : 's'} in your cart</p>
           </header>
           <ul>
-            {me.cart.map(cartItem => <CartItem key={cartItem.id} cartItem={cartItem} />)}
+            {me.cart.map(cartItem => <CartItem key={cartItem.id} cartItem={cartItem}/>)}
           </ul>
           <footer>
             <p>{formatMoney(calcTotalPrice(me.cart))}</p>
-            <SickButton>Checkout</SickButton>
+            <TakeMyMoney>
+              <SickButton>Checkout</SickButton>
+            </TakeMyMoney>
           </footer>
         </CartStyles>
       )
