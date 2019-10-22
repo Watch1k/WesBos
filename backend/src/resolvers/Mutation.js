@@ -221,13 +221,26 @@ const Mutations = {
     }
     return ctx.db.mutation.deleteCartItem({
       where: { id: args.id },
-    }, info )
+    }, info)
   },
   async createOrder(parent, args, ctx, info) {
-    if (!ctx.request.userId) {
+    const { userId } = ctx.request
+    if (!userId) {
       throw new Error('You must be logged in to do that!')
     }
-  }
+    const user = await ctx.db.query.user({ where: { id: userId } }, `
+    {
+      id
+      name
+      email
+      cart {
+        id
+        quantity
+        item { title price id description image }
+      }
+    }`);
+    const amount = user.cart.reduce((tally, cartItem) => tally.cartItem.item.price * cartItem.quantity, 0);
+  },
 }
 
 module.exports = Mutations
