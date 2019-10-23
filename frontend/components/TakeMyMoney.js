@@ -12,7 +12,7 @@ const CREATE_ORDER_MUTATION = gql`
     mutation createOrder($token: String!) {
         createOrder(token: $token) {
             id
-            change
+            charge
             total
             items {
                 id

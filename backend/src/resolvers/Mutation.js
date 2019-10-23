@@ -4,6 +4,7 @@ const { randomBytes } = require('crypto')
 const { promisify } = require('util')
 const { transport, makeEmail } = require('../mail')
 const { hasPermissions } = require('../utils')
+const stripe = require('../stripe')
 
 const Mutations = {
   async createItem(parent, args, ctx, info) {
@@ -238,8 +239,30 @@ const Mutations = {
         quantity
         item { title price id description image }
       }
-    }`);
-    const amount = user.cart.reduce((tally, cartItem) => tally.cartItem.item.price * cartItem.quantity, 0);
+    }`)
+    const amount = user.cart.reduce((tally, cartItem) => tally + cartItem.item.price * cartItem.quantity, 0)
+    const charge = await stripe.charges.create({
+      amount,
+      currency: 'USD',
+      source: args.token,
+    })
+    const orderItems = user.cart.map(cartItem => {
+      const orderItem = {
+        ...cartItem,
+        quantity: cartItem.quantity,
+        user: { connect: { id: userId } },
+      }
+      delete orderItem.id
+      return orderItem
+    })
+    const order = await ctx.db.mutation.createOrder({
+      data: {
+        total: charge.amount,
+        charge: charge.id,
+        items: { create: orderItems },
+        user: { connect: { id: userId } },
+      },
+    })
   },
 }
 
