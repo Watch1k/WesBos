@@ -1,7 +1,4 @@
 import React from 'react'
-import Router from 'next/router'
-import NProgress from 'nprogress'
-import PropTypes from 'prop-types'
 import User, { CURRENT_USER_QUERY } from './User'
 import { Mutation } from 'react-apollo'
 import StripeCheckout from 'react-stripe-checkout'
@@ -25,12 +22,13 @@ const CREATE_ORDER_MUTATION = gql`
 const totalItems = cart => cart.reduce((tally, item) => tally + item.quantity, 0)
 
 class TakeMyMoney extends React.Component {
-  onToken = (res, createOrder) => {
-    createOrder({
+  onToken = async (res, createOrder) => {
+    const order = await createOrder({
       variables: {
         token: res.id,
       },
     }).catch(err => alert(err.message))
+    console.log(order)
   }
 
   render() {
