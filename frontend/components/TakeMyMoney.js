@@ -1,5 +1,8 @@
 import React from 'react'
 import User, { CURRENT_USER_QUERY } from './User'
+import Router from 'next/router'
+import NProgress from 'nprogress'
+import PropTypes from 'prop-types'
 import { Mutation } from 'react-apollo'
 import StripeCheckout from 'react-stripe-checkout'
 import calcTotalPrice from '../lib/calcTotalPrice'
@@ -23,12 +26,16 @@ const totalItems = cart => cart.reduce((tally, item) => tally + item.quantity, 0
 
 class TakeMyMoney extends React.Component {
   onToken = async (res, createOrder) => {
+    NProgress.start()
     const order = await createOrder({
       variables: {
         token: res.id,
       },
     }).catch(err => alert(err.message))
-    console.log(order)
+    Router.push({
+      pathname: '/order',
+      query: { id: order.data.createOrder.id },
+    })
   }
 
   render() {
